@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "parcel": "^1.12.4"
+  },
+  "scripts": {
+    "start": "parcel serve ./src/index.html"
+  },
+  "name": "webgl-traning",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ArakiTakaki/webgl-traning.git",
+  "author": "ArakiTakaki <araki_takaki@yahoo.co.jp>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  }
+}
