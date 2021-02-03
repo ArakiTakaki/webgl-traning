@@ -34,14 +34,10 @@ function programWrap(
     const buffer = gl.createBuffer();
     const attributeLocation = gl.getAttribLocation(program, name);
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    // in変数を有効化します
     gl.enableVertexAttribArray(attributeLocation);
-    // 現在バインドしているバッファと変数を結びつけます。
     gl.vertexAttribPointer(attributeLocation, size, gl.FLOAT, false, stride, offset);
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    const result = bufferWrap(attributeLocation, size, gl, name, buffer, bufType, usage);
-    result.updateBuffer(array);
-    return result;
+    gl.bufferData(bufType, array, usage);
+    return bufferWrap(attributeLocation, size, gl, name, buffer, bufType, usage);
   }
 
   function use() {
@@ -55,6 +51,7 @@ function programWrap(
     stride: number = 0,
     offset: number = 0,
   ) => _createBuffer(name, size, array,gl.ARRAY_BUFFER, gl.STATIC_DRAW, stride, offset);
+
   const createIBO = (
     name: string,
     size: number,

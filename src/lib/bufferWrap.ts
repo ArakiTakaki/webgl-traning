@@ -19,7 +19,6 @@ function bufferWrap(
     gl.bindBuffer(bufType, null);
   }
 
-
   return {
     updateBuffer,
     useBuffer,

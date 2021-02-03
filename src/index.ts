@@ -22,15 +22,11 @@ void main() {
 }
 `;
 
-
 function main() {
   const glContent = canvasWrap(document.getElementById("glCanvas"));
-
-  // shading
   const fragmentShader1 = glContent.createFragmentShader(fsSource);
   const vertexShader1 = glContent.createVertexShader(vsSource);
   const shaderProgram1 = glContent.createProgram(vertexShader1, fragmentShader1);
-
   shaderProgram1.createVBO(
     "vertexPosition",
     3,
@@ -38,7 +34,6 @@ function main() {
     7 * Float32Array.BYTES_PER_ELEMENT,
     0,
   );
-
   shaderProgram1.createVBO(
     "color",
     4,
@@ -47,11 +42,19 @@ function main() {
     3 * Float32Array.BYTES_PER_ELEMENT,
   );
 
-  glContent.render(() => {
-    shaderProgram1.use();
-    glContent.gl.drawArrays(glContent.gl.TRIANGLES, 0, 6); // 6のpositionsは外だしできそう
-  });
+  const indexBuffer = glContent.gl.createBuffer();
+  glContent.gl.bindBuffer(glContent.gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  glContent.gl.bufferData(glContent.gl.ELEMENT_ARRAY_BUFFER, indices, glContent.gl.STATIC_DRAW);
+
+  glContent.gl.clear(glContent.gl.COLOR_BUFFER_BIT | glContent.gl.DEPTH_BUFFER_BIT);
+  shaderProgram1.use();
+  glContent.gl.drawElements(glContent.gl.TRIANGLES, indices.length, glContent.gl.UNSIGNED_SHORT, 0);
+  glContent.gl.flush();
+
+  // glContent.render(() => {
+  //   shaderProgram1.use();
+  //   glContent.gl.drawArrays(glContent.gl.TRIANGLES, 0, 6); // 6のpositionsは外だしできそう
+  // });
 }
 
 main();
-

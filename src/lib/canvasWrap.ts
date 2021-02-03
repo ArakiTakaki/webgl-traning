@@ -20,7 +20,7 @@ function canvasWrap(canvas: HTMLElement, {
   const gl = canvas.getContext("webgl2");
   if (gl == null) throw new Error("gl context not found");
   const wrap = glWrap(gl);
-  wrap.initalRender();
+  wrap.initialRender();
 
   return {
     canvas,
