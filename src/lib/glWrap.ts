@@ -1,6 +1,6 @@
 import programWrap from './programWrap';
 
-function glWrap(gl: WebGLRenderingContext) {
+function glWrap(gl: WebGL2RenderingContext) {
   function _createShader(type: number, source: string): WebGLShader {
     const shader = gl.createShader(type);
     if (shader == null) throw new Error("create program error");
@@ -30,17 +30,30 @@ function glWrap(gl: WebGLRenderingContext) {
     if (shaderProgram == null) throw new Error("create program not found");
     return programWrap(gl, shaderProgram, vertextShader, fragmentShader);
   }
+
   function initalRender() {
     // WebGL が使用可能で動作している場合にのみ続行します
     // クリアカラーを黒に設定し、完全に不透明にします
-    // 指定されたクリアカラーでカラーバッファをクリアします
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    gl.clearDepth(1.0);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0); // カラーバッファのクリア
+    gl.clearDepth(1.0); // Depthテスト
     // DEPTHテストを有効化する。
     gl.enable(gl.DEPTH_TEST); // Enable depth testing
     // DEPTHテストの関数
     gl.depthFunc(gl.LEQUAL); // Near things obscure far things
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  }
+  function render(cb: (time: number) => void) {
+    let id = 0;
+    const main = (time: number) => {
+      id = window.requestAnimationFrame(main);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      cb(time);
+      gl.flush();
+    };
+    id = window.requestAnimationFrame(main)
+    return () => {
+      window.cancelAnimationFrame(id);
+    };
   }
 
   return {
@@ -48,7 +61,8 @@ function glWrap(gl: WebGLRenderingContext) {
     createVertexShader,
     initalRender,
     createProgram,
-    gl
+    render,
+    gl,
   };
 }
 
